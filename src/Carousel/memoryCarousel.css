@@ -2,25 +2,21 @@
 :root {
 	--primary: #9d00ff;
 	--secondary: #00e5ff;
-	--accent: #ff00e5;
+	--accent: #2600ff;
 	--background: #050510;
-	--card-bg: rgba(20, 20, 40, 0.7);
+	--card-bg: rgba(4, 4, 71, 0.7);
 	--text-primary: #ffffff;
 	--text-secondary: #b8b8ff;
-	--glow-primary: 0 0 10px rgba(157, 0, 255, 0.7),
-		0 0 20px rgba(157, 0, 255, 0.5);
-	--glow-secondary: 0 0 10px rgba(0, 229, 255, 0.7),
-		0 0 20px rgba(0, 229, 255, 0.5);
-	--glow-accent: 0 0 10px rgba(255, 0, 229, 0.7), 0 0 20px rgba(255, 0, 229, 0.5);
+	--glow-primary: 0 0 10px rgba(34, 12, 75, 0.7),
+		0 0 20px rgba(73, 8, 179, 0.5);
+	--glow-secondary: 0 0 10px rgba(25, 24, 46, 0.7),
+		0 0 20px rgba(14, 12, 53, 0.5);
+	--glow-accent: 0 0 10px rgba(38, 21, 59, 0.7), 0 0 20px rgba(23, 11, 66, 0.5);
 	--card-width: 300px;
 	--card-height: 420px;
 	--carousel-radius: 400px;
 	--transition-speed: 0.5s;
 }
-
-
-
-
 
 .title {
 	font-size: 2.5rem;
@@ -33,7 +29,6 @@
 	animation: pulse 3s infinite alternate;
 }
 
-/* Cosmic Background */
 .cosmos-background {
 	position: fixed;
 	top: 0;

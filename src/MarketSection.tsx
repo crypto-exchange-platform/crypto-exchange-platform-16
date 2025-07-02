@@ -1,22 +1,20 @@
 import { useEffect, useState } from 'react';
-import { FaArrowUp, FaArrowDown } from 'react-icons/fa6';
 import clsx from 'clsx';
+import { FaArrowUp, FaArrowDown } from 'react-icons/fa6';
 
-interface MarketItem {
+interface TrendingPair {
   symbol: string;
   name: string;
   price: number;
-  change: number; 
-  volume: string;
+  change: number;
+  sparkline: number[];
 }
 
-const mockMarketData: MarketItem[] = [
-  { symbol: 'BTC', name: 'Bitcoin', price: 103102, change: 2.5, volume: '36.4B' },
-  { symbol: 'ETH', name: 'Ethereum', price: 3250, change: 1.8, volume: '18.2B' },
-  { symbol: 'SOL', name: 'Solana', price: 142.35, change: 3.1, volume: '3.9B' },
-  { symbol: 'XRP', name: 'Ripple', price: 0.92, change: -0.4, volume: '2.5B' },
-  { symbol: 'DOGE', name: 'Dogecoin', price: 0.125, change: 1.1, volume: '1.2B' },
-  { symbol: 'ADA', name: 'Cardano', price: 0.47, change: 1.2, volume: '1.6B' },
+const trending: TrendingPair[] = [
+  { symbol: 'MATICUSDT', name: 'Polygon', price: 0.2913, change: 3.15, sparkline: [0.25, 0.28, 0.29, 0.291] },
+  { symbol: 'BNBUSDT', name: 'BNB', price: 611.48, change: 0.65, sparkline: [608, 612, 611] },
+  { symbol: 'RUNEUSDT', name: 'Thorchain', price: 1.44, change: -1.63, sparkline: [1.51, 1.45, 1.44] },
+  { symbol: 'AVAXUSDT', name: 'Avalanche', price: 24.49, change: 0.88, sparkline: [24, 24.4, 24.5] },
 ];
 
 const MarketSection = () => {
@@ -24,10 +22,9 @@ const MarketSection = () => {
 
   useEffect(() => {
     const onScroll = () => {
-      const section = document.getElementById('market-section');
-      if (section) {
-        const top = section.getBoundingClientRect().top;
-        if (top < window.innerHeight - 100) setAnimate(true);
+      const el = document.getElementById('market-section');
+      if (el && el.getBoundingClientRect().top < window.innerHeight - 100) {
+        setAnimate(true);
       }
     };
     window.addEventListener('scroll', onScroll);
@@ -37,38 +34,92 @@ const MarketSection = () => {
   return (
     <section
       id="market-section"
-      className="relative py-20 px-4 sm:px-8 lg:px-16 bg-gradient-to-br from-violet-950 to-black overflow-hidden"
+      className="bg-gradient-to-br from-black to-violet-950  text-white py-20 px-4 sm:px-8 lg:px-16 overflow-hidden"
     >
-      <div className={clsx("transition-all duration-1000", animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10")}>
-        <h2 className="text-3xl sm:text-4xl font-bold text-white text-center mb-12">
-          Market Overview
+      <div className={clsx('transition-all duration-1000', animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10')}>
+        <h2 className="text-3xl sm:text-4xl font-bold text-center mb-12 text-violet-400">
+          Crypto Market Overview
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {mockMarketData.map((item) => (
+
+        <div className="overflow-x-auto flex gap-4 mb-10">
+          {trending.map((item, idx) => (
             <div
-              key={item.symbol}
-              className="bg-violet-900/30 backdrop-blur-sm border border-violet-600/30 rounded-lg p-6 transition-transform duration-300 hover:scale-105"
+              key={idx}
+              className="min-w-[200px] p-4 rounded-lg bg-violet-950/60 backdrop-blur-md border border-violet-600/30"
             >
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-white text-xl font-semibold">
-                  {item.name} ({item.symbol})
-                </h3>
-                <div
-                  className={clsx(
-                    'flex items-center gap-1 font-semibold',
-                    item.change >= 0 ? 'text-green-400' : 'text-red-400'
-                  )}
-                >
-                  {item.change >= 0 ? <FaArrowUp /> : <FaArrowDown />}
-                  {item.change}%
-                </div>
+              <h3 className="font-semibold text-violet-200">{item.symbol}</h3>
+              <p className="text-sm text-violet-400">{item.name}</p>
+              <p className="text-xl mt-2 font-bold text-white">${item.price.toFixed(4)}</p>
+              <div
+                className={clsx(
+                  'mt-1 flex items-center gap-1 text-sm font-medium',
+                  item.change >= 0 ? 'text-green-400' : 'text-red-400'
+                )}
+              >
+                {item.change >= 0 ? <FaArrowUp /> : <FaArrowDown />}
+                {item.change}%
               </div>
-              <div className="text-gray-300 text-lg">
-                <div>Price: ${item.price.toLocaleString()}</div>
-                <div>Volume: {item.volume}</div>
+              <div className="mt-3 h-8 w-full">
+                <svg className="w-full h-full" viewBox="0 0 100 30" preserveAspectRatio="none">
+                  <polyline
+                    fill="none"
+                    stroke={item.change >= 0 ? '#7c3aed' : '#f87171'}
+                    strokeWidth="2"
+                    points={item.sparkline.map((v, i) => `${(i / (item.sparkline.length - 1)) * 100},${30 - v * 10}`).join(' ')}
+                  />
+                </svg>
               </div>
             </div>
           ))}
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-violet-950 p-6 rounded-lg border border-violet-600/30">
+            <h4 className="text-lg font-semibold text-violet-300 mb-2">Market Cap & Volume</h4>
+            <div className="flex justify-between text-sm text-violet-200 mb-4">
+              <div>
+                <p className="text-violet-400">Market Cap</p>
+                <p className="text-xl text-violet-300">$2.85T</p>
+              </div>
+              <div>
+                <p className="text-violet-400">Volume</p>
+                <p className="text-xl text-violet-300">$71.27B</p>
+              </div>
+            </div>
+            <div className="w-full h-40 bg-gradient-to-br from-violet-500/20 to-violet-900/10 rounded-md relative overflow-hidden">
+              <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="absolute inset-0 w-full h-full">
+                <polyline
+                  fill="none"
+                  stroke="#8b5cf6"
+                  strokeWidth="2"
+                  points="0,35 10,30 20,25 30,28 40,22 50,18 60,15 70,20 80,10 90,12 100,8"
+                />
+              </svg>
+            </div>
+          </div>
+
+          <div className="bg-violet-950 p-6 rounded-lg border border-violet-600/30 flex flex-col items-center justify-center">
+            <h4 className="text-lg font-semibold text-violet-300 mb-4">Fear & Greed Index</h4>
+            <div className="w-40 h-20 relative">
+              <svg viewBox="0 0 100 50" className="w-full h-full">
+                <path
+                  d="M 10 40 A 40 40 0 0 1 90 40"
+                  fill="none"
+                  stroke="#6b21a8"
+                  strokeWidth="10"
+                />
+                <path
+                  d="M 10 40 A 40 40 0 0 1 70 20"
+                  fill="none"
+                  stroke="#c084fc"
+                  strokeWidth="10"
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute left-1/2 top-[60%] -translate-x-1/2 text-white font-bold text-xl">60</div>
+              <p className="text-sm text-violet-400 mt-3">Slightly Bullish</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>
