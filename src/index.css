@@ -10,12 +10,19 @@
 
 html {
   scroll-behavior: smooth;
-  overflow: hidden;
-
   font-family: "Iceland", sans-serif;
-
+  overflow: auto;
+  scrollbar-width: none; /* Firefox */
 }
-  
+
+body {
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+html::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
 
 nav {
   animation: headerFadeIn 0.8s ease-out;
